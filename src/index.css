@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-100 text-slate-900 font-sans dark:bg-slate-950 dark:text-white transition-colors duration-300;
+}
+
+* {
+  @apply transition-colors duration-200;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: #cbd5e1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
