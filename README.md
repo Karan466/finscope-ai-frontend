@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# FinScope AI Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern AI-powered finance governance dashboard built with **React + TypeScript + Vite**.  
+This frontend provides a premium SaaS-style interface for monitoring financial records, approvals, anomalies, audit logs, and user management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Live Demo
 
-## React Compiler
+- **Frontend:** https://finscope-ai-frontend.vercel.app/
+- **Backend API:** https://finscope-ai-backend.onrender.com/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔐 Authentication (Login / Register)
+- 🧑‍💼 Role-based dashboard access
+- 📊 Dashboard analytics
+- 📈 Finance charts and summaries
+- 💰 Financial records management
+- ✅ Approval workflow UI
+- 🚨 Anomaly detection UI
+- 📜 Audit log monitoring
+- 👥 User management panel
+- 🌙 Dark / Light theme
+- 📱 Responsive modern UI
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **React**
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **React Router DOM**
+- **Axios**
+- **Recharts**
+- **React Hot Toast**
+- **Lucide React**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📂 Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+```bash
+src/
+├── components/
+│   ├── charts/
+│   ├── common/
+│   └── layout/
+├── context/
+├── pages/
+│   ├── auth/
+│   ├── dashboard/
+│   └── public/
+├── routes/
+├── services/
+├── App.tsx
+├── main.tsx
+└── index.css
