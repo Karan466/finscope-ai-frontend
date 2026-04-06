@@ -9,43 +9,58 @@ const DashboardHome = () => {
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        // 1) fetch stats first
-        const statsRes = await API.get("/dashboard/stats");
-        console.log("Stats Response:", statsRes.data);
+  const [filter, setFilter] = useState("monthly");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-        setStats(statsRes.data.data);
+  const fetchDashboard = async () => {
+    try {
+      setLoading(true);
 
-        // 2) fetch monthly separately
-        try {
-          const monthlyRes = await API.get("/dashboard/monthly-summary");
-          console.log("Monthly Response:", monthlyRes.data);
+      let statsUrl = `/dashboard/stats?type=${filter}`;
+      let monthlyUrl = `/dashboard/monthly-summary?type=${filter}`;
 
-          const formattedMonthly = Object.entries(monthlyRes.data.data || {}).map(
-            ([month, value]: any) => ({
-              month,
-              income: value.income,
-              expense: value.expense,
-            })
-          );
-
-          setMonthlyData(formattedMonthly);
-        } catch (monthlyError) {
-          console.error("Monthly summary failed:", monthlyError);
-          setMonthlyData([]);
-        }
-      } catch (err) {
-        console.error("Dashboard stats failed:", err);
-        toast.error("Failed to load dashboard stats");
-      } finally {
-        setLoading(false);
+      if (filter === "custom" && startDate && endDate) {
+        statsUrl = `/dashboard/stats?startDate=${startDate}&endDate=${endDate}`;
+        monthlyUrl = `/dashboard/monthly-summary?startDate=${startDate}&endDate=${endDate}`;
       }
-    };
 
-    fetchDashboard();
-  }, []);
+      const statsRes = await API.get(statsUrl);
+      setStats(statsRes.data.data);
+
+      try {
+        const monthlyRes = await API.get(monthlyUrl);
+
+        const formattedMonthly = Object.entries(monthlyRes.data.data || {}).map(
+          ([month, value]: any) => ({
+            month,
+            income: value.income,
+            expense: value.expense,
+          })
+        );
+
+        setMonthlyData(formattedMonthly);
+      } catch (monthlyError) {
+        console.error("Monthly summary failed:", monthlyError);
+        setMonthlyData([]);
+      }
+    } catch (err) {
+      console.error("Dashboard stats failed:", err);
+      toast.error("Failed to load dashboard stats");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (filter === "custom") {
+      if (startDate && endDate) {
+        fetchDashboard();
+      }
+    } else {
+      fetchDashboard();
+    }
+  }, [filter, startDate, endDate]);
 
   if (loading) {
     return <p className="text-slate-400">Loading dashboard...</p>;
@@ -72,6 +87,10 @@ const DashboardHome = () => {
       value: `₹${stats.totalExpense ?? 0}`,
     },
     {
+      title: "Net Balance",
+      value: `₹${stats.netBalance ?? 0}`,
+    },
+    {
       title: "Pending Approvals",
       value: stats.pendingApprovals ?? 0,
     },
@@ -91,27 +110,107 @@ const DashboardHome = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold">Dashboard Overview</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-2">
-          Monitor financial activity, approvals, and anomalies in real time.
+      {/* Header */}
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold">Dashboard Overview</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
+            Monitor financial activity, approvals, anomalies and trends in real time.
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setFilter("monthly")}
+            className={`px-4 py-2 rounded-2xl font-medium transition ${
+              filter === "monthly"
+                ? "bg-primary text-white shadow-glow"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+            }`}
+          >
+            Monthly
+          </button>
+
+          <button
+            onClick={() => setFilter("yearly")}
+            className={`px-4 py-2 rounded-2xl font-medium transition ${
+              filter === "yearly"
+                ? "bg-primary text-white shadow-glow"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+            }`}
+          >
+            Yearly
+          </button>
+
+          <button
+            onClick={() => setFilter("custom")}
+            className={`px-4 py-2 rounded-2xl font-medium transition ${
+              filter === "custom"
+                ? "bg-primary text-white shadow-glow"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+            }`}
+          >
+            Custom
+          </button>
+        </div>
+      </div>
+
+      {/* Custom date inputs */}
+      {filter === "custom" && (
+        <div className="flex flex-wrap gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+          <div>
+            <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
+              Start Date
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
+              End Date
+            </label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* KPI Cards */}
+      <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-6">
+        {cards.map((card) => (
+          <div
+            key={card.title}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm hover:shadow-md transition"
+          >
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              {card.title}
+            </p>
+            <h3 className="text-3xl font-bold mt-3">{card.value}</h3>
+          </div>
+        ))}
+      </div>
+
+      {/* AI Insight Card */}
+      <div className="bg-gradient-to-r from-primary/10 to-indigo-500/10 border border-primary/20 rounded-3xl p-6 shadow-sm">
+        <h3 className="text-xl font-bold mb-2">AI Insight</h3>
+        <p className="text-slate-600 dark:text-slate-300">
+          {stats.totalExpense > stats.totalIncome
+            ? "Your expenses are higher than your income in this selected period. Consider reviewing large spending patterns."
+            : "Your finances are healthy in this selected period. Income is currently exceeding expenses."}
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-  {cards.map((card) => (
-    <div
-      key={card.title}
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm"
-    >
-      <p className="text-slate-500 dark:text-slate-400 text-sm">
-        {card.title}
-      </p>
-      <h3 className="text-3xl font-bold mt-3">{card.value}</h3>
-    </div>
-  ))}
-</div>
-
+      {/* Charts */}
       <div className="grid xl:grid-cols-2 gap-6">
         <FinanceBarChart data={chartSummaryData} />
         <MonthlyTrendChart data={monthlyData} />
