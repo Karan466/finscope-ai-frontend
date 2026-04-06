@@ -4,12 +4,25 @@ import FinanceBarChart from "../../components/charts/FinanceBarChart";
 import MonthlyTrendChart from "../../components/charts/MonthlyTrendChart";
 import toast from "react-hot-toast";
 
+const categories = [
+  "ALL",
+  "Salary",
+  "Travel",
+  "Rent",
+  "Vendor Payment",
+  "Equipment Purchase",
+  "Construction",
+  "Food",
+  "Utilities",
+];
+
 const DashboardHome = () => {
   const [stats, setStats] = useState<any>(null);
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [filter, setFilter] = useState("monthly");
+  const [category, setCategory] = useState("ALL");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -17,12 +30,12 @@ const DashboardHome = () => {
     try {
       setLoading(true);
 
-      let statsUrl = `/dashboard/stats?type=${filter}`;
-      let monthlyUrl = `/dashboard/monthly-summary?type=${filter}`;
+      let statsUrl = `/dashboard/stats?type=${filter}&category=${category}`;
+      let monthlyUrl = `/dashboard/monthly-summary?type=${filter}&category=${category}`;
 
       if (filter === "custom" && startDate && endDate) {
-        statsUrl = `/dashboard/stats?startDate=${startDate}&endDate=${endDate}`;
-        monthlyUrl = `/dashboard/monthly-summary?startDate=${startDate}&endDate=${endDate}`;
+        statsUrl = `/dashboard/stats?startDate=${startDate}&endDate=${endDate}&category=${category}`;
+        monthlyUrl = `/dashboard/monthly-summary?startDate=${startDate}&endDate=${endDate}&category=${category}`;
       }
 
       const statsRes = await API.get(statsUrl);
@@ -60,7 +73,7 @@ const DashboardHome = () => {
     } else {
       fetchDashboard();
     }
-  }, [filter, startDate, endDate]);
+  }, [filter, startDate, endDate, category]);
 
   if (loading) {
     return <p className="text-slate-400">Loading dashboard...</p>;
@@ -78,26 +91,11 @@ const DashboardHome = () => {
   }
 
   const cards = [
-    {
-      title: "Total Income",
-      value: `₹${stats.totalIncome ?? 0}`,
-    },
-    {
-      title: "Total Expense",
-      value: `₹${stats.totalExpense ?? 0}`,
-    },
-    {
-      title: "Net Balance",
-      value: `₹${stats.netBalance ?? 0}`,
-    },
-    {
-      title: "Pending Approvals",
-      value: stats.pendingApprovals ?? 0,
-    },
-    {
-      title: "Anomalies",
-      value: stats.anomalyCount ?? 0,
-    },
+    { title: "Total Income", value: `₹${stats.totalIncome ?? 0}` },
+    { title: "Total Expense", value: `₹${stats.totalExpense ?? 0}` },
+    { title: "Net Balance", value: `₹${stats.netBalance ?? 0}` },
+    { title: "Pending Approvals", value: stats.pendingApprovals ?? 0 },
+    { title: "Anomalies", value: stats.anomalyCount ?? 0 },
   ];
 
   const chartSummaryData = [
@@ -110,7 +108,6 @@ const DashboardHome = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold">Dashboard Overview</h2>
@@ -119,7 +116,6 @@ const DashboardHome = () => {
           </p>
         </div>
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setFilter("monthly")}
@@ -156,36 +152,53 @@ const DashboardHome = () => {
         </div>
       </div>
 
-      {/* Custom date inputs */}
-      {filter === "custom" && (
-        <div className="flex flex-wrap gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
-          <div>
-            <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
-              Start Date
-            </label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
-              End Date
-            </label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
-            />
-          </div>
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm flex flex-wrap gap-4 items-end">
+        <div>
+          <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
+            Category
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
 
-      {/* KPI Cards */}
+        {filter === "custom" && (
+          <>
+            <div>
+              <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
+                Start Date
+              </label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-slate-500 dark:text-slate-400 mb-2">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+              />
+            </div>
+          </>
+        )}
+      </div>
+
       <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-6">
         {cards.map((card) => (
           <div
@@ -200,17 +213,15 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      {/* AI Insight Card */}
       <div className="bg-gradient-to-r from-primary/10 to-indigo-500/10 border border-primary/20 rounded-3xl p-6 shadow-sm">
         <h3 className="text-xl font-bold mb-2">AI Insight</h3>
         <p className="text-slate-600 dark:text-slate-300">
           {stats.totalExpense > stats.totalIncome
-            ? "Your expenses are higher than your income in this selected period. Consider reviewing large spending patterns."
-            : "Your finances are healthy in this selected period. Income is currently exceeding expenses."}
+            ? "Your expenses are higher than your income in this selected filter. Consider reviewing major spending categories."
+            : "Your finances are healthy in this selected filter. Income is currently exceeding expenses."}
         </p>
       </div>
 
-      {/* Charts */}
       <div className="grid xl:grid-cols-2 gap-6">
         <FinanceBarChart data={chartSummaryData} />
         <MonthlyTrendChart data={monthlyData} />
