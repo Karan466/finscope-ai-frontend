@@ -1,85 +1,83 @@
 🚀 FinScope AI | Enterprise Finance Governance & Anomaly Detection
 FinScope AI is a high-performance Fintech Governance platform designed for modern organizations. It streamlines financial monitoring, enforces strict approval workflows, and leverages intelligent anomaly detection to safeguard corporate fiscal integrity.
 
-🔗 Live Ecosystem
+🌐 Live Ecosystem
 Production Frontend: https://finscope-ai-frontend.vercel.app/
 
 Production API: https://finscope-ai-backend.onrender.com/
 
-🛠️ High-Level Tech Stack
-Core: React 18, TypeScript, Vite
+🛠️ Tech Stack
+Frontend: React 18, TypeScript, Vite
 
-State & Logic: Context API, Axios (Interceptors for JWT management)
+Styling: Tailwind CSS (Modern SaaS Glassmorphism)
 
 Data Visualization: Recharts (Interactive Financial Trends)
 
-Styling: Tailwind CSS (Premium SaaS Glassmorphism)
+State Management: Context API & Axios Interceptors
 
-Routing: React Router 6 (RBAC Protected Routes)
+Icons & UI: Lucide React, React Hot Toast
 
 💎 Key Business Modules
 🔐 01. Enterprise Security & RBAC
-Role-Based Access Control (RBAC): Granular permissions for User and Admin roles.
+Role-Based Access Control (RBAC): Granular permissions for User and Admin tiers.
 
-JWT Security: Seamless authentication with automated token injection via Axios interceptors.
+JWT Authentication: Secure session management with automated token injection via Axios interceptors.
 
-Protected Routes: Strict client-side gatekeeping to prevent unauthorized data exposure.
+Protected Routes: Strict client-side gatekeeping to prevent unauthorized data access.
 
 📊 02. Intelligent Analytics Dashboard
-KPI Tracking: Real-time monitoring of Net Balance, Total Income, and Expenses.
+Real-time KPIs: Instant tracking of Net Balance, Total Income, and Expenses.
 
-Dynamic Filtering: Monthly, Yearly, and Custom Date range trend analysis.
+Trend Analysis: Dynamic Recharts integration for Monthly and Yearly financial visualizations.
 
-System Health: Visibility into "Pending Approvals" and "Anomalies Count" at a glance.
+System Health: Command center view for pending approvals and flagged anomalies.
 
 ✅ 03. Governance & Approval Workflows
-Two-Tier Approval: A dedicated workflow for administrators to review, approve, or reject records.
+Admin Review: Dedicated interface for approving or rejecting financial submissions.
 
-Data Integrity: Prevents unauthorized modifications, ensuring a "Single Source of Truth."
+Data Integrity: Ensures all records undergo a verified workflow before final entry.
 
 🚨 04. Anomaly Detection UI
-Suspicious Activity Alerts: Specialized view for flagged transactions.
+Fraud Mitigation: Specialized view highlighting suspicious transactions and unusual patterns.
 
-Proactive Auditing: Highlights unusual financial patterns to mitigate fraud and human error.
+Proactive Auditing: Tools for administrators to investigate flagged activity immediately.
 
 📜 05. Immutable Audit Logs
-System Traceability: Comprehensive tracking of all critical system actions for compliance.
+System Traceability: Comprehensive logging of all critical system actions for regulatory compliance.
 
-📂 Architecture & Design
+📂 Architecture
 Bash
 src/
 ├── components/
-│   ├── charts/    # Reusable Recharts implementations
-│   ├── common/    # UI Building blocks (Buttons, Modals, Badges)
-│   └── layout/    # Responsive Sidebar & Navbar Architecture
-├── context/       # Global State (Auth, Theme)
-├── services/      # Clean API Service Layer (Axios)
-├── routes/        # RBAC-enabled routing logic
-└── pages/         # Modular feature-based views
-🚀 Impact & Performance
-99.999% Data Reliability: Achieved through strict status-check logic and immutable log tracking.
+│   ├── charts/    # Interactive Recharts components
+│   ├── common/    # Reusable UI elements (Buttons, Modals, Badges)
+│   └── layout/    # Responsive Navigation & Sidebar architecture
+├── context/       # Global State Management (Auth, Theme)
+├── services/      # Modular API Service Layer
+├── routes/        # RBAC-guarded routing logic
+└── pages/         # Feature-based view components
+🚀 Performance & Impact
+99.999% Data Reliability: Implemented through strict status-check logic and immutable log tracking.
 
-Low Latency UI: Optimized Vite-based build ensures sub-second page transitions.
+Optimized Core Web Vitals: Vite-powered build system ensures sub-second LCP and smooth transitions.
 
-Clean Code Standards: Highly modularized component structure using TypeScript for type-safety.
+Type-Safe Architecture: Developed with TypeScript to minimize runtime exceptions in financial logic.
 
-📈 Future Scalability
-[ ] AI Engine Integration: Advanced ML scoring for transaction risk assessments.
+💻 Local Setup
+Clone the repository:
 
-[ ] Reporting Suite: One-click CSV/PDF export for financial compliance reports.
+Bash
+git clone https://github.com/Karan466/finscope-ai-frontend.git
+cd finscope-ai-frontend
+Configure Environment:
+Create a .env file in the root:
 
-[ ] Notification Center: Real-time Push/Email alerts for anomaly detection.
-
-💻 Installation & Local Setup
-Clone & Enter:
-git clone https://github.com/Karan466/finscope-ai-frontend.git && cd finscope-ai-frontend
-
-Environment Configuration:
-Create a .env file:
+Code snippet
 VITE_API_BASE_URL=https://finscope-ai-backend.onrender.com/api/v1
+Install and Run:
 
-Install & Run:
-npm install && npm run dev
-
-👨‍💻 Developer
-Karan Kumar – Software Engineer | Distributed Systems Enthusiast LinkedIn | GitHub
+Bash
+npm install
+npm run dev
+👨‍💻 Developed By
+Karan Kumar Software Engineer | Distributed Systems & Backend Enthusiast LinkedIn | GitHub
